@@ -120,7 +120,7 @@ router.route('/updateuseremp').put((req, res) => {
             res.json({
                 success: true,
                 message: "UserId is updated successfully",
-                //result: response
+                result: response
             }); 
         } else {
             console.log("UserId Not Found");
