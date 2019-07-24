@@ -126,7 +126,7 @@ router.route('/updatejobseeker').put((req, res) => {
             res.json({
                 success: true,
                 message: "PrimarySkills is updated successfully",
-                //result: response
+                result: response
             }); 
         } else {
             console.log("User Not Found");
