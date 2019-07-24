@@ -144,7 +144,7 @@ router.route('/getuseremp').get((req, res) => {
                 error: err
             });
         } 
-        if(response != null){
+        if(response.length > 0){
             console.log("Users Found");
             res.json({
                 success: true,
