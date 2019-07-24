@@ -125,8 +125,8 @@ router.route('/getcaseinfoadmin').get((req, res) => {
                 error: err
             });
         } 
-        console.log("CaseInfoAdmin Found");
-            if(response.length > 0){
+            if(response != null){
+            console.log("CaseInfoAdmin Found");
             res.json({
                 success: true,
                 message: 'CaseInfoAdmin Found',

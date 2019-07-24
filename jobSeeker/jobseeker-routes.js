@@ -150,12 +150,20 @@ router.route('/getjobseeker').get((req, res) => {
                 error: err
             });
         } 
-        console.log("Users Found");
+        if(response != null){
+            console.log("Jobseekers Found");
             res.json({
                 success: true,
                 message: 'Jobseekers Found',
                 result: response
             });
+            }else {
+            res.json({
+                success: false,
+                message: 'No Jobseekers Found',
+                error: err
+            });
+         }
     })
 });
 
