@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const UserEmp = require('./user-model'); 
-const constant=require('./Constant')
+const constant=require('../Constant')
 
 
  router.route('/useremp').post((req, res) => {
@@ -25,15 +25,14 @@ const constant=require('./Constant')
             console.log(err)
             res.json({
                 success: false,
-                message: 'Something went wrong',
+                message: constant.genericError,
                 error: err
             })
         }
         if(response.length>0){
-            console.log("Userid already exists. Please login "+constant.test);
             res.json({
                 success: false,
-                message: 'Userid already exists. Please login',
+                message: constant.userExists,
                 error: err
             })
         } else {
@@ -62,7 +61,7 @@ const constant=require('./Constant')
         
                         res.json({
                             success: true,
-                            message: "UserId is Registered successfully",
+                            message: constant.userReg,
                             result: user
                         });
         
@@ -87,14 +86,14 @@ router.route('/deleteuseremp').delete((req, res) => {
         if(response != null){
             res.json({
                 success: true,
-                message: "UserId is Deleted successfully",
+                message: constant.userDeleted,
                 result: response
             }); 
         } else {
             console.log("UserId Not Found");
             res.json({
                 success: false,
-                message: 'UserId Not Found',
+                message: constant.userNotFound,
                 error: err
             });
         }
@@ -119,14 +118,13 @@ router.route('/updateuseremp').put((req, res) => {
         if(response != null){
             res.json({
                 success: true,
-                message: "UserId is updated successfully",
+                message: constant.userStatusUpdated,
                 result: response
             }); 
         } else {
-            console.log("UserId Not Found");
             res.json({
                 success: false,
-                message: 'UserId Not Found',
+                message: constant.userNotFound,
                 error: err
             });
         }
@@ -145,7 +143,6 @@ router.route('/getuseremp').get((req, res) => {
             });
         } 
         if(response.length > 0){
-            console.log("Users Found");
             res.json({
                 success: true,
                 message: 'Users Found',
@@ -154,13 +151,54 @@ router.route('/getuseremp').get((req, res) => {
             }else {
             res.json({
                 success: false,
-                message: 'No Users Found',
+                message: constant.userEmpty,
                 error: err
             });
          }
+
+         
     })
 });
 
+router.route('/login').post((req, res) => {
+    const UserId = req.body.UserId;
+    const Password = req.body.Password;
 
+    UserEmp.find({
+        UserId : UserId
+    },function(err, userResp){
+        if(err){
+            console.log(err)
+            res.json({
+                success: false,
+                message: constant.genericError,
+                error: err
+            })
+        }
+        if(userResp==null){
+            res.json({
+                success: false,
+                message: 'User does not Exists',
+                error: err
+            })
+        } 
+        if(userResp != null) {
+            if(userResp[0].UserId == UserId && userResp[0].Password == Password){
+                res.json({
+                    success: true,
+                    message: constant.loginSuccess,
+                    result: userResp
+                });
+            }else{
+                res.json({
+                    success: false,
+                    message: constant.loginError,
+                    error: err
+                });
+            }
+        }
+        
+    })
+});
 
 module.exports = router;
