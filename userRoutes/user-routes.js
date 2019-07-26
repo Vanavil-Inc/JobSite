@@ -4,7 +4,7 @@ const UserEmp = require('./user-model');
 const constant=require('./Constant')
 
 
- router.route('/useremp').post((req, res) => {
+ router.route('/registeruser').post((req, res) => {
 
     const Status = req.body.Status;
     const UserId = req.body.UserId;
