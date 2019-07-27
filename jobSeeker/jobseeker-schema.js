@@ -3,6 +3,27 @@ const mongoose = require('mongoose')
 const ObjectID = mongoose.Schema.Types.ObjectId;
 
 module.exports = new mongoose.Schema({
+    UserId: {
+        type: String
+    },
+    Password: {
+        type: String
+    },
+    UserName: {
+        type: String
+    },
+    UserType: {
+        type: String
+    },
+    email: {
+        type: String
+    },
+    Address: {
+        type: String
+    },
+    Country: {
+        type: String
+    },
     FIN: {
         type: String
     },

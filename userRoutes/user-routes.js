@@ -16,7 +16,7 @@ const constant=require('../Constant')
     const Organisation = req.body.Organisation;
     const MOM = req.body.MOM;
     const Address = req.body.Address;
-    const Country = req.body.Country
+    const Country = req.body.Country;
 
     UserEmp.find({
         UserId : UserId

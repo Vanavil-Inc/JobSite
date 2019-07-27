@@ -3,6 +3,13 @@ const router = require('express').Router();
 const seeker = require('./jobseeker-model');
 
 router.route('/jobseeker').post((req, res) => {
+    const UserId = req.body.UserId;
+    const Password = req.body.Password;
+    const UserName = req.body.UserName;
+    const UserType = req.body.UserType;
+    const email = req.body.email;
+    const Address = req.body.Address;
+    const Country = req.body.Country;
     const FIN = req.body.FIN;
     const PassportNum = req.body.PassportNum;
     const PlaceOfISsue = req.body.PlaceOfISsue;
@@ -22,7 +29,7 @@ router.route('/jobseeker').post((req, res) => {
     const DocDirPath = req.body.DocDirPath;
 
     seeker.find({
-        PassportNum : PassportNum
+        UserId : UserId
     },function(err, response){
         if(err){
             console.log(err)
@@ -41,6 +48,13 @@ router.route('/jobseeker').post((req, res) => {
             })
     } else {
         var jobSeekerObj = {
+            UserId : UserId,
+            Password : Password,
+            UserName : UserName,
+            UserType : UserType,
+            email : email,
+            Address : Address,
+            Country : Country,
             FIN : FIN,
             PassportNum : PassportNum,
             PlaceOfISsue : PlaceOfISsue,
