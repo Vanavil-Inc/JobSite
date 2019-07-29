@@ -33,9 +33,6 @@ module.exports = new mongoose.Schema({
     Address: {
         type: String
     },
-    token : {
-        type: String
-    },
     ObjId: {
         type: ObjectID
     },

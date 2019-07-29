@@ -3,9 +3,6 @@ const mongoose = require('mongoose')
 const ObjectID = mongoose.Schema.Types.ObjectId;
 
 module.exports = new mongoose.Schema({
-    Status: {
-        type: Boolean
-    },
     UserId: {
         type: String
     },
@@ -74,9 +71,6 @@ module.exports = new mongoose.Schema({
     },
     AirTicket: {
         type: Boolean
-    },
-    token : {
-        type: String
     },
     DocDirPath: {
         type: String

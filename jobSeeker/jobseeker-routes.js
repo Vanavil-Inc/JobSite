@@ -1,13 +1,8 @@
 const router = require('express').Router();
-const jwt = require('jsonwebtoken');
 
 const seeker = require('./jobseeker-model');
-const UserEmp = require('../userRoutes/user-model');
-const constant=require('../Constant');
-const config = require('../Config');
 
 router.route('/jobseeker').post((req, res) => {
-    const Status = req.body.Status;
     const UserId = req.body.UserId;
     const Password = req.body.Password;
     const UserName = req.body.UserName;
@@ -53,7 +48,6 @@ router.route('/jobseeker').post((req, res) => {
             })
     } else {
         var jobSeekerObj = {
-            Status : Status,
             UserId : UserId,
             Password : Password,
             UserName : UserName,
@@ -88,10 +82,11 @@ router.route('/jobseeker').post((req, res) => {
                     error: err
                 });
             }
+                
                 res.json({
                     success: true,
                     message: "User Registered Successfully",
-                    result: jobSeeker
+                result: jobSeeker
                 });
         })
     }
@@ -160,154 +155,29 @@ router.route('/updatejobseeker').put((req, res) => {
     })
 });
 
-router.route('/getalljobseeker').post((req, res) => {
-
-    const UserId = req.body.UserId;
-    const token = req.body.token;
-
-    UserEmp.find({UserId : UserId}, function(err,empResp){
-        if(err){
-            res.json({
-                success: false,
-                message: 'Employer not found',
-                error: err
-            });
-        }
-        if(token === empResp[0].token){
-            seeker.find({},function(err, response){
-                if (err) {
-                    res.json({
-                        success: false,
-                        message: 'Jobseekers not found',
-                        error: err
-                    });
-                } 
-                if(response.length > 0){
-                    console.log("Jobseekers Found");
-                    res.json({
-                        success: true,
-                        message: 'Jobseekers Found',
-                        result: response
-                    });
-                    }else {
-                    res.json({
-                        success: false,
-                        message: 'No Jobseekers Found',
-                        error: err
-                    });
-                 }
-            })
-        }
-    })
-    
-});
-
-router.route('/getonejobseeker').post((req, res) => {
-
-    const UserId = req.body.UserId;
-    const token = req.body.token;
-
-    seeker.find({UserId : UserId},function(err, response){
+router.route('/getjobseeker').get((req, res) => {
+    seeker.find({},function(err, response){
         if (err) {
             res.json({
                 success: false,
-                message: 'User data not found',
+                message: 'Jobseekers not found',
                 error: err
             });
         } 
-        console.log("Updated dbtoken " + response[0].token)
-        console.log("passed token : " + token)
-        if(token === response[0].token){
-            if(response.length > 0){
-                res.json({
-                    success: true,
-                    message: 'User data Found',
-                    result: response
-                });
-                }else {
-                res.json({
-                    success: false,
-                    message: constant.userEmpty,
-                    error: err
-                });
-             }
-        } else {
+        if(response.length > 0){
+            console.log("Jobseekers Found");
+            res.json({
+                success: true,
+                message: 'Jobseekers Found',
+                result: response
+            });
+            }else {
             res.json({
                 success: false,
-                message: "Not Authorized",
+                message: 'No Jobseekers Found',
                 error: err
             });
-        }
-    })
-});
-
-router.route('/jslogin').post((req, res) => {
-    const UserId = req.body.UserId;
-    const Password = req.body.Password;
-
-    console.log(UserId);
-    console.log(Password);
-
-    let token =  jwt.sign({UserId, Password}, config.secret, { expiresIn: '60000' });
-    console.log("generated token : " + token)
-
-    seeker.find({
-        UserId : UserId
-    },function(err, userResp){
-        if(err){
-            console.log(err)
-            res.json({
-                success: false,
-                message: constant.genericError,
-                error: err
-            })
-        }
-
-        console.log(userResp)
-    
-        if(userResp != "") {
-            if(userResp[0].Password === Password){
-                seeker.findOneAndUpdate({UserId : UserId},{token : token}, function(err, resp){
-                    if(err){
-                        console.log("update err" + err);
-                    } else {
-                        console.log("token updated : "+ token);
-                        // console.log("token updated response : " + resp);
-                        seeker.find({UserId : UserId}, function(err, updateResp){
-                            if(err){
-                                res.json({
-                                    success: false,
-                                    message: constant.genericError,
-                                    error: err
-                                })
-                            } else {
-                                console.log("updated new resp : " + updateResp);
-                                res.json({
-                                    success: true,
-                                    message: "Update success",
-                                    result: updateResp
-                                });
-                            }
-                        })
-                       
-                    }
-                })
-            } else { 
-                res.json({
-                    success: false,
-                    message: constant.loginError,
-                    error: err
-                });
-            }
-        } else {
-            res.json({
-                success: false,
-                message: 'User does not Exists',
-                error: err
-            })
-
-        }
-        
+         }
     })
 });
 

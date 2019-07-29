@@ -1,9 +1,7 @@
 const router = require('express').Router();
-const jwt = require('jsonwebtoken');
 
 const UserEmp = require('./user-model'); 
-const constant=require('../Constant');
-const config = require('../Config');
+const constant=require('../Constant')
 
 
  router.route('/registeruser').post((req, res) => {
@@ -135,7 +133,7 @@ router.route('/updateuseremp').put((req, res) => {
     })
 });
 
-router.route('/getalluseremp').get((req, res) => {
+router.route('/getuseremp').get((req, res) => {
     UserEmp.find({},function(err, response){
         if (err) {
             res.json({
@@ -162,13 +160,9 @@ router.route('/getalluseremp').get((req, res) => {
     })
 });
 
-
-router.route('/emplogin').post((req, res) => {
+router.route('/login').post((req, res) => {
     const UserId = req.body.UserId;
     const Password = req.body.Password;
-
-    let token =  jwt.sign({UserId, Password}, config.secret, { expiresIn: '60000' });
-    console.log(token);
 
     UserEmp.find({
         UserId : UserId
@@ -181,49 +175,27 @@ router.route('/emplogin').post((req, res) => {
                 error: err
             })
         }
-
-        console.log(userResp)
-    
-        if(userResp != "") {
-            if(userResp[0].Password === Password){
-                UserEmp.findOneAndUpdate({UserId : UserId},{token : token}, function(err, resp){
-                    if(err){
-                        console.log("update err" + err);
-                    } else {
-                        console.log("token updated" + token);
-                        UserEmp.find({UserId : UserId}, function(err, updateResp){
-                            if(err){
-                                res.json({
-                                    success: false,
-                                    message: constant.genericError,
-                                    error: err
-                                })
-                            } else {
-                                console.log("updated new resp : " + updateResp);
-                                res.json({
-                                    success: true,
-                                    message: "Update success",
-                                    result: updateResp
-                                });
-                            }
-                        })
-                    }
-                })
-               
-            }else{ 
+        if(userResp==null){
+            res.json({
+                success: false,
+                message: 'User does not Exists',
+                error: err
+            })
+        } 
+        if(userResp != null) {
+            if(userResp[0].UserId == UserId && userResp[0].Password == Password){
+                res.json({
+                    success: true,
+                    message: constant.loginSuccess,
+                    result: userResp
+                });
+            }else{
                 res.json({
                     success: false,
                     message: constant.loginError,
                     error: err
                 });
             }
-        } else {
-            res.json({
-                success: false,
-                message: 'User does not Exists',
-                error: err
-            })
-
         }
         
     })
