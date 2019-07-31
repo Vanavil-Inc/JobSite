@@ -4,7 +4,7 @@ const ObjectID = mongoose.Schema.Types.ObjectId;
 
 module.exports = new mongoose.Schema({
     Status: {
-        type: Boolean
+        type: String
     },
     UserId: {
         type: String

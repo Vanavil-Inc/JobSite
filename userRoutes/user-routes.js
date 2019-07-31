@@ -73,7 +73,7 @@ const config = require('../Config');
     })
 });
 
-router.route('/deleteuseremp').delete((req, res) => {
+router.route('/deleteuseremp').post((req, res) => {
     const UserId = req.body.UserId;
 
     UserEmp.findOneAndDelete({
@@ -104,7 +104,7 @@ router.route('/deleteuseremp').delete((req, res) => {
     })
 });
 
-router.route('/updateuseremp').put((req, res) => {
+router.route('/updateuseremp').post((req, res) => {
     const UserId = req.body.UserId;
     const Status = req.body.Status;
 

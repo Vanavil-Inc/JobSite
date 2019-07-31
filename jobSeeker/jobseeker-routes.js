@@ -1,12 +1,16 @@
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
+// var multer  = require('multer')
+// var upload = multer({ dest: 'uploads/' })
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
 
 const seeker = require('./jobseeker-model');
 const UserEmp = require('../userRoutes/user-model');
 const constant=require('../Constant');
 const config = require('../Config');
 
-router.route('/jobseeker').post((req, res) => {
+router.route('/jobseeker', multipartMiddleware).post((req, res,next) => {
     const Status = req.body.Status;
     const UserId = req.body.UserId;
     const Password = req.body.Password;
@@ -32,6 +36,20 @@ router.route('/jobseeker').post((req, res) => {
     const Accommodation = req.body.Accommodation;
     const AirTicket = req.body.AirTicket;
     const DocDirPath = req.body.DocDirPath;
+
+
+    console.log(req.body, req.files);
+    // console.log(DocDirPath);
+//     console.log(req.file);
+//     var storage = multer.diskStorage({
+//         destination: function (req, file, cb) {
+//         cb(null, './uploads')
+//       },
+//       filename: function (req, file, cb) {
+//         cb(null, Date.now() + '-' +file.originalname )
+//       }
+//   })
+//   console.log(storage);
 
     seeker.find({
         UserId : UserId
@@ -84,7 +102,7 @@ router.route('/jobseeker').post((req, res) => {
             if (err) {
                 res.json({
                     success: false,
-                    message: 'Email Id is already registered',
+                    message: 'User Id is already registered',
                     error: err
                 });
             }
@@ -99,15 +117,17 @@ router.route('/jobseeker').post((req, res) => {
     
 });
 
-router.route('/deletejobseeker').delete((req, res) => {
-        const PassportNum = req.body.PassportNum;
+router.route('/deletejobseeker').post((req, res) => {
+    const UserId = req.body.UserId;
 
+        // console.log("userid"+UserId);
+        console.log(req.body);
         seeker.findOneAndDelete({
-            PassportNum : PassportNum},function(err, response){
+            UserId : UserId},function(err, response){
                 if (err) {
                     res.json({
                         success: false,
-                        message: 'Jobseekar not deleted',
+                        message: 'Jobseeker not deleted',
                         error: err
                     });
                 }
@@ -118,46 +138,86 @@ router.route('/deletejobseeker').delete((req, res) => {
                         result: response
                     }); 
                 } else {
-                    console.log("Jobseekar Not Found");
+                    console.log("Jobseeker Not Found");
                     res.json({
                         success: false,
-                        message: 'Jobseekar Not Found',
+                        message: 'Jobseeker Not Found',
                         error: err
                     });
                 }
             })
 });
 
-router.route('/updatejobseeker').put((req, res) => {
-    const PassportNum = req.body.PassportNum;
+router.route('/updatejobseeker').post((req, res) => {
+    const UserId = req.body.UserId;
     const PrimarySkills = req.body.PrimarySkills;
+    const CurrentEmp = req.body.CurrentEmp;
+    const Status = req.body.Status;
+    const UserType = req.body.UserType;
 
-    seeker.findOneAndUpdate({
-        PassportNum : PassportNum},{$set: {PrimarySkills: PrimarySkills}},function(err, response){
-        if (err) {
-            res.json({
-                success: false,
-                message: 'PrimarySkills not updated',
-                error: err
-            });
-        } 
-        if(response != null){
-            res.json({
-                success: true,
-                message: "PrimarySkills is updated successfully",
-                result: response
-            }); 
-        } else {
-            console.log("User Not Found");
-            res.json({
-                success: false,
-                message: 'User Not Found',
-                error: err
-            });
-        }
+    console.log(Status);
+    if(UserType != ""){
+    if(UserType === "999"){
+        seeker.findOneAndUpdate({
+            UserId : UserId},{PrimarySkills: PrimarySkills,CurrentEmp:CurrentEmp},function(err, response){
+            if (err) {
+                res.json({
+                    success: false,
+                    message: 'Profile not updated',
+                    error: err
+                });
+            } 
+            if(response != null){
+                res.json({
+                    success: true,
+                    message: "Profile updated successfully",
+                    result: response
+                }); 
+            } else {
+                console.log("User Not Found");
+                res.json({
+                    success: false,
+                    message: "Profile not updated",
+                    error: err
+                });
+            }   
+        })
+    } else {
+        seeker.findOneAndUpdate({
+            UserId : UserId},{Status: Status},function(err, response){
+            if (err) {
+                res.json({
+                    success: false,
+                    message: 'Profile not updated',
+                    error: err
+                });
+            } 
+            if(response != null){
+                res.json({
+                    success: true,
+                    message: "Profile updated successfully",
+                    result: response
+                }); 
+            } else {
+                console.log("User Not Found");
+                res.json({
+                    success: false,
+                    message: "Profile not updated",
+                    error: err
+                });
+            }   
+        })
 
-            
-    })
+    }
+} else {
+    res.json({
+        success: false,
+        message: "Not authorized",
+        error: err
+    });
+
+}
+    
 });
 
 router.route('/getalljobseeker').post((req, res) => {
@@ -172,7 +232,12 @@ router.route('/getalljobseeker').post((req, res) => {
                 message: 'Employer not found',
                 error: err
             });
+        
         }
+        // console.log("DATA VALUES : " + empResp)
+        // console.log("UPDTED TOKEN  " + empResp[0].token)
+        // console.log("PASSED TOKEN : " + token)
+        if(UserId && token !=""){
         if(token === empResp[0].token){
             seeker.find({},function(err, response){
                 if (err) {
@@ -198,6 +263,14 @@ router.route('/getalljobseeker').post((req, res) => {
                  }
             })
         }
+    } else {
+        res.json({
+            success: false,
+            message: 'Not authorized',
+            error: err
+        });
+
+    }
     })
     
 });
@@ -215,8 +288,8 @@ router.route('/getonejobseeker').post((req, res) => {
                 error: err
             });
         } 
-        console.log("Updated dbtoken " + response[0].token)
-        console.log("passed token : " + token)
+        // console.log("Updated dbtoken " + response[0].token)
+        // console.log("passed token : " + token)
         if(token === response[0].token){
             if(response.length > 0){
                 res.json({
