@@ -10,7 +10,7 @@ const UserEmp = require('../userRoutes/user-model');
 const constant=require('../Constant');
 const config = require('../Config');
 
-router.route('/jobseeker', multipartMiddleware).post((req, res,next) => {
+router.route('/jobseeker').post((req, res,next) => {
     const Status = req.body.Status;
     const UserId = req.body.UserId;
     const Password = req.body.Password;
@@ -26,6 +26,7 @@ router.route('/jobseeker', multipartMiddleware).post((req, res,next) => {
     const ExpiryDate = req.body.ExpiryDate;
     const PrimarySkills = req.body.PrimarySkills;
     const AdditionalSkills = req.body.AdditionalSkills;
+    const OtherSkills = req.body.OtherSkills;
     const ExpInYear = req.body.ExpInYear;
     const ExpInMonth = req.body.ExpInMonth;
     const CurrentEmp = req.body.CurrentEmp;
@@ -38,7 +39,7 @@ router.route('/jobseeker', multipartMiddleware).post((req, res,next) => {
     const DocDirPath = req.body.DocDirPath;
 
 
-    console.log(req.body, req.files);
+    // console.log(req.body, req.files);
     // console.log(DocDirPath);
 //     console.log(req.file);
 //     var storage = multer.diskStorage({
@@ -63,10 +64,9 @@ router.route('/jobseeker', multipartMiddleware).post((req, res,next) => {
             })
         }
         if(response.length>0){
-            console.log("You already have an account with us. Please login")
             res.json({
                 success: false,
-                message: 'You already have an account with us. Please login',
+                message: 'UserId is already Registered',
                 error: err
             })
     } else {
@@ -86,6 +86,7 @@ router.route('/jobseeker', multipartMiddleware).post((req, res,next) => {
             ExpiryDate : ExpiryDate,
             PrimarySkills : PrimarySkills,
             AdditionalSkills : AdditionalSkills,
+            OtherSkills:OtherSkills,
             ExpInYear : ExpInYear,
             ExpInMonth : ExpInMonth,
             CurrentEmp : CurrentEmp,
@@ -108,7 +109,7 @@ router.route('/jobseeker', multipartMiddleware).post((req, res,next) => {
             }
                 res.json({
                     success: true,
-                    message: "User Registered Successfully",
+                    message: "Registered Successfully",
                     result: jobSeeker
                 });
         })
@@ -148,18 +149,54 @@ router.route('/deletejobseeker').post((req, res) => {
             })
 });
 
-router.route('/updatejobseeker').post((req, res) => {
+router.route('/updatejobseeker').put((req, res) => {
     const UserId = req.body.UserId;
     const PrimarySkills = req.body.PrimarySkills;
     const CurrentEmp = req.body.CurrentEmp;
     const Status = req.body.Status;
     const UserType = req.body.UserType;
+    const UserName = req.body.UserName;
+    const email = req.body.email;
+    const Address = req.body.Address;
+    const Country = req.body.Country;
+    const AdditionalSkills = req.body.AdditionalSkills;
+    const OtherSkills = req.body.OtherSkills;
+    const ExpInYear = req.body.ExpInYear;
+    const ExpInMonth = req.body.ExpInMonth;
+    const CurrentSal = req.body.CurrentSal;
+    const ExpSal = req.body.ExpSal;
+    const JoinDate = req.body.JoinDate;
+    const OverTime = req.body.OverTime;
+    const Accommodation = req.body.Accommodation;
+    const AirTicket = req.body.AirTicket;
+    const DocDirPath = req.body.DocDirPath;
+
+    var jobSeekerObj = {
+        UserName : UserName,
+        email : email,
+        Address : Address,
+        Country : Country,
+        PrimarySkills : PrimarySkills,
+        AdditionalSkills : AdditionalSkills,
+        OtherSkills:OtherSkills,
+        ExpInYear : ExpInYear,
+        ExpInMonth : ExpInMonth,
+        CurrentEmp : CurrentEmp,
+        CurrentSal : CurrentSal,
+        ExpSal : ExpSal,
+        JoinDate : JoinDate,
+        OverTime : OverTime,
+        Accommodation : Accommodation,
+        AirTicket : AirTicket,
+        DocDirPath : DocDirPath    
+
+    }
 
     console.log(Status);
     if(UserType != ""){
     if(UserType === "999"){
         seeker.findOneAndUpdate({
-            UserId : UserId},{PrimarySkills: PrimarySkills,CurrentEmp:CurrentEmp},function(err, response){
+            UserId : UserId},jobSeekerObj,function(err, response){
             if (err) {
                 res.json({
                     success: false,

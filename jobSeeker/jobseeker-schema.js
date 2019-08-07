@@ -48,6 +48,9 @@ module.exports = new mongoose.Schema({
     AdditionalSkills: {
         type: String
     },
+    OtherSkills:{
+        type: String
+    },
     ExpInYear: {
         type: String
     },

@@ -2,7 +2,7 @@
 module.exports = {
 
     genericError: 'Something went wrong',
-    userReg:'User Registered successfully',
+    userReg:'Registered successfully',
     userExists:'User is already Registered',
     userDeleted : 'User is Deleted Successfully',
     userNotFound : 'User Not Found',
