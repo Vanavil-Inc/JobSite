@@ -135,7 +135,7 @@ router.route('/deletejobseeker').post((req, res) => {
                 if(response != null){
                     res.json({
                         success: true,
-                        message: "Jobseeker is Deleted successfully",
+                        message: "Deleted successfully",
                         result: response
                     }); 
                 } else {
