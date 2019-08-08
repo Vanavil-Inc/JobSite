@@ -202,7 +202,7 @@ router.route('/emplogin').post((req, res) => {
                                 console.log("updated new resp : " + updateResp);
                                 res.json({
                                     success: true,
-                                    message: "Update success",
+                                    message: "Login success",
                                     result: updateResp
                                 });
                             }

@@ -151,52 +151,17 @@ router.route('/deletejobseeker').post((req, res) => {
 
 router.route('/updatejobseeker').put((req, res) => {
     const UserId = req.body.UserId;
-    const PrimarySkills = req.body.PrimarySkills;
-    const CurrentEmp = req.body.CurrentEmp;
     const Status = req.body.Status;
     const UserType = req.body.UserType;
-    const UserName = req.body.UserName;
-    const email = req.body.email;
-    const Address = req.body.Address;
-    const Country = req.body.Country;
-    const AdditionalSkills = req.body.AdditionalSkills;
-    const OtherSkills = req.body.OtherSkills;
-    const ExpInYear = req.body.ExpInYear;
-    const ExpInMonth = req.body.ExpInMonth;
-    const CurrentSal = req.body.CurrentSal;
-    const ExpSal = req.body.ExpSal;
-    const JoinDate = req.body.JoinDate;
-    const OverTime = req.body.OverTime;
-    const Accommodation = req.body.Accommodation;
-    const AirTicket = req.body.AirTicket;
-    const DocDirPath = req.body.DocDirPath;
+    
 
-    var jobSeekerObj = {
-        UserName : UserName,
-        email : email,
-        Address : Address,
-        Country : Country,
-        PrimarySkills : PrimarySkills,
-        AdditionalSkills : AdditionalSkills,
-        OtherSkills:OtherSkills,
-        ExpInYear : ExpInYear,
-        ExpInMonth : ExpInMonth,
-        CurrentEmp : CurrentEmp,
-        CurrentSal : CurrentSal,
-        ExpSal : ExpSal,
-        JoinDate : JoinDate,
-        OverTime : OverTime,
-        Accommodation : Accommodation,
-        AirTicket : AirTicket,
-        DocDirPath : DocDirPath    
+    console.log("TEST");
+    console.log(req.body);
 
-    }
-
-    console.log(Status);
     if(UserType != ""){
     if(UserType === "999"){
         seeker.findOneAndUpdate({
-            UserId : UserId},jobSeekerObj,function(err, response){
+            UserId : UserId},req.body,function(err, response){
             if (err) {
                 res.json({
                     success: false,
@@ -394,7 +359,7 @@ router.route('/jslogin').post((req, res) => {
                                 console.log("updated new resp : " + updateResp);
                                 res.json({
                                     success: true,
-                                    message: "Update success",
+                                    message: "Login success",
                                     result: updateResp
                                 });
                             }
