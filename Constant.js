@@ -9,7 +9,8 @@ module.exports = {
     userEmpty : 'No Users Found',
     loginSuccess : 'Login Successfull',
     userStatusUpdated : 'User Status is Updated Successfully',
-    loginError : 'Incorrect UserId or Password'
+    loginError : 'Incorrect UserId or Password',
+    contactSubmit : 'Submitted Successfully'
 }
 // const test="Dummy message";
 // module.exports= test;
