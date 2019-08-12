@@ -21,6 +21,15 @@ module.exports = new mongoose.Schema({
     email: {
         type: String
     },
+    OtherContact:{
+        type: String
+    },
+    Organisation:{
+        type: String
+    },
+    MOM:{
+        type: String
+    },
     Address: {
         type: String
     },

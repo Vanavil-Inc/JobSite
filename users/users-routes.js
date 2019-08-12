@@ -5,18 +5,20 @@ const jwt = require('jsonwebtoken');
 var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();
 
-const seeker = require('./jobseeker-model');
-const UserEmp = require('../userRoutes/user-model');
+const seeker = require('./users-model');
 const constant=require('../Constant');
 const config = require('../Config');
 
-router.route('/jobseeker').post((req, res,next) => {
+router.route('/register').post((req, res,next) => {
     const Status = req.body.Status;
     const UserId = req.body.UserId;
     const Password = req.body.Password;
     const UserName = req.body.UserName;
     const UserType = req.body.UserType;
     const email = req.body.email;
+    const OtherContact = req.body.OtherContact;
+    const Organisation = req.body.Organisation;
+    const MOM = req.body.MOM;
     const Address = req.body.Address;
     const Country = req.body.Country;
     const FIN = req.body.FIN;
@@ -77,6 +79,9 @@ router.route('/jobseeker').post((req, res,next) => {
             UserName : UserName,
             UserType : UserType,
             email : email,
+            OtherContact:OtherContact,
+            Organisation:Organisation,
+            MOM:MOM,
             Address : Address,
             Country : Country,
             FIN : FIN,
@@ -177,6 +182,7 @@ router.route('/updatejobseeker').put((req, res) => {
                 }); 
             } else {
                 console.log("User Not Found");
+                // console.log(err);
                 res.json({
                     success: false,
                     message: "Profile not updated",
@@ -225,9 +231,10 @@ router.route('/updatejobseeker').put((req, res) => {
 router.route('/getalljobseeker').post((req, res) => {
 
     const UserId = req.body.UserId;
+    const UserType = "999";
     const token = req.body.token;
 
-    UserEmp.find({UserId : UserId}, function(err,empResp){
+    seeker.find({UserId : UserId}, function(err,resp){
         if(err){
             res.json({
                 success: false,
@@ -236,12 +243,12 @@ router.route('/getalljobseeker').post((req, res) => {
             });
         
         }
-        // console.log("DATA VALUES : " + empResp)
-        // console.log("UPDTED TOKEN  " + empResp[0].token)
+       // console.log("DATA VALUES : " + empResp)
+        // console.log("UPDTED TOKEN  " + resp[0].token)
         // console.log("PASSED TOKEN : " + token)
         if(UserId && token !=""){
-        if(token === empResp[0].token){
-            seeker.find({},function(err, response){
+        if(token === resp[0].token){
+            seeker.find({UserType:UserType},function(err, response){
                 if (err) {
                     res.json({
                         success: false,
@@ -290,7 +297,7 @@ router.route('/getonejobseeker').post((req, res) => {
                 error: err
             });
         } 
-        // console.log("Updated dbtoken " + response[0].token)
+        // console.log("Updated UserId " + UserId)
         // console.log("passed token : " + token)
         if(token === response[0].token){
             if(response.length > 0){
@@ -316,7 +323,7 @@ router.route('/getonejobseeker').post((req, res) => {
     })
 });
 
-router.route('/jslogin').post((req, res) => {
+router.route('/login').post((req, res) => {
     const UserId = req.body.UserId;
     const Password = req.body.Password;
 
