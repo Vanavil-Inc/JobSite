@@ -91,8 +91,7 @@ module.exports = new mongoose.Schema({
         type: String
     },
     DocDirPath: {
-        type: Buffer,
-        contentType: String
+        type: String
     },
     ObjId: {
         type: ObjectID
