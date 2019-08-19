@@ -12,6 +12,8 @@ const config = require('../Config');
 
 router.route('/register').post((req, res,next) => {
 
+    try{
+    if(req.body.UserType === "999"){
     const file = req.files.file;
     console.log("fiel " + JSON.stringify(file));
 
@@ -47,6 +49,10 @@ router.route('/register').post((req, res,next) => {
             }
         })
     }
+}
+} catch(e){
+ console.log(e);
+}
         const Status = req.body.Status;
         const UserId = req.body.UserId;
         const Password = req.body.Password;
@@ -181,10 +187,6 @@ router.route('/updatejobseeker').put((req, res) => {
     const UserId = req.body.UserId;
     const Status = req.body.Status;
     const UserType = req.body.UserType;
-    
-
-    console.log("TEST");
-    console.log(req.body);
 
     if(UserType != ""){
     if(UserType === "999"){
@@ -290,7 +292,7 @@ router.route('/manageaccount').put((req, res) => {
             } else {
                 res.json({
                     success: false,
-                    message: "Password not matched with current password",
+                    message: "Current Password is wrong",
                     error: err
                 });
             }
@@ -309,7 +311,6 @@ router.route('/getalljobseeker').post((req, res) => {
 
     const UserId = req.body.UserId;
     const UserType = "999";
-    const token = req.body.token;
 
     seeker.find({UserId : UserId}, function(err,resp){
         if(err){
@@ -322,8 +323,7 @@ router.route('/getalljobseeker').post((req, res) => {
        // console.log("DATA VALUES : " + empResp)
         // console.log("UPDTED TOKEN  " + resp[0].token)
         // console.log("PASSED TOKEN : " + token)
-        if(UserId && token !=""){
-        if(token === resp[0].token){
+        if(UserId !=""){
             seeker.find({UserType:UserType},function(err, response){
                 if (err) {
                     res.json({
@@ -347,23 +347,19 @@ router.route('/getalljobseeker').post((req, res) => {
                     });
                  }
             })
-        }
     } else {
         res.json({
             success: false,
-            message: 'Not authorized',
+            message: 'Jobseekers not found',
             error: err
         });
-
     }
-    })
-    
+    }) 
 });
 
 router.route('/getonejobseeker').post((req, res) => {
 
     const UserId = req.body.UserId;
-    const token = req.body.token;
 
     seeker.find({UserId : UserId},function(err, response){
         if (err) {
@@ -373,9 +369,6 @@ router.route('/getonejobseeker').post((req, res) => {
                 error: err
             });
         } 
-        // console.log("Updated UserId " + UserId)
-        // console.log("passed token : " + token)
-        if(token === response[0].token){
             if(response.length > 0){
                 res.json({
                     success: true,
@@ -389,13 +382,6 @@ router.route('/getonejobseeker').post((req, res) => {
                     error: err
                 });
              }
-        } else {
-            res.json({
-                success: false,
-                message: "Not Authorized",
-                error: err
-            });
-        }
     })
 });
 
@@ -404,10 +390,7 @@ router.route('/login').post((req, res) => {
     const Password = req.body.Password;
     const deviceWidth = req.body.deviceWidth;
 
-    console.log(UserId);
-    console.log(Password);
-
-    let token =  jwt.sign({UserId, Password}, config.secret, { expiresIn: '60000' });
+    let token =  jwt.sign({UserId, Password}, config.secret, { expiresIn: '10000' });
     console.log("generated token : " + token)
     seeker.find({
         UserId : UserId
@@ -442,11 +425,11 @@ router.route('/login').post((req, res) => {
                              
                                 console.log("updated new resp : " + updateResp);
 
-                                if(updateResp[0].UserType ==="999" && deviceWidth < 768 || deviceWidth > 768 )      {
+                                if((updateResp[0].UserType ==="999" && deviceWidth < 768 ) || deviceWidth > 768 )      {
                                     res.json({
                                         success: true,
                                         message: "Login success",
-                                        result: updateResp
+                                        result: updateResp          
                                     });
                                 }
                                 else {
@@ -480,7 +463,6 @@ router.route('/login').post((req, res) => {
     }) 
     
 });
-
 
 
 module.exports = router;
