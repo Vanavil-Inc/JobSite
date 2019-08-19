@@ -390,7 +390,7 @@ router.route('/login').post((req, res) => {
     const Password = req.body.Password;
     const deviceWidth = req.body.deviceWidth;
 
-    let token =  jwt.sign({UserId, Password}, config.secret, { expiresIn: '10000' });
+    let token =  jwt.sign({UserId, Password}, config.secret, { expiresIn: '30000' });
     console.log("generated token : " + token)
     seeker.find({
         UserId : UserId
