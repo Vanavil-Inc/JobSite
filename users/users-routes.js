@@ -184,12 +184,15 @@ router.route('/deletejobseeker').post((req, res) => {
 });
 
 router.route('/updatejobseeker').put((req, res) => {
+    console.log(req.body);
+
+    const UserType = req.body.UserType;
     const UserId = req.body.UserId;
     const Status = req.body.Status;
-    const UserType = req.body.UserType;
+    console.log("USER TYPE "+UserType);
 
     if(UserType != ""){
-    if(UserType === "999"){
+    if(UserType === "999" || "001"){
         seeker.findOneAndUpdate({
             UserId : UserId},req.body,function(err, response){
             if (err) {
@@ -390,7 +393,7 @@ router.route('/login').post((req, res) => {
     const Password = req.body.Password;
     const deviceWidth = req.body.deviceWidth;
 
-    let token =  jwt.sign({UserId, Password}, config.secret, { expiresIn: '30000' });
+    let token =  jwt.sign({UserId, Password}, config.secret, { expiresIn: '10000' });
     console.log("generated token : " + token)
     seeker.find({
         UserId : UserId
