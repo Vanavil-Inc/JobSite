@@ -184,12 +184,15 @@ router.route('/deletejobseeker').post((req, res) => {
 });
 
 router.route('/updatejobseeker').put((req, res) => {
+    console.log(req.body);
+
+    const UserType = req.body.UserType;
     const UserId = req.body.UserId;
     const Status = req.body.Status;
-    const UserType = req.body.UserType;
+    console.log("USER TYPE "+UserType);
 
     if(UserType != ""){
-    if(UserType === "999"){
+    if(UserType === "999" || "001"){
         seeker.findOneAndUpdate({
             UserId : UserId},req.body,function(err, response){
             if (err) {

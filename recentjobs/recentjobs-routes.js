@@ -1,9 +1,6 @@
 const router = require('express').Router();
-const jwt = require('jsonwebtoken');
 
 const recentjobs = require('./recentjobs-model'); 
-const constant=require('../Constant');
-const config = require('../Config');
 
 router.route('/jobpost').post((req, res) => {
     console.log(req.body);
