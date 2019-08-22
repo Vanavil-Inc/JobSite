@@ -6,6 +6,7 @@ const constant=require('../Constant');
 const config = require('../Config');
 
 router.route('/jobpost').post((req, res) => {
+    console.log(req.body);
     const JobNo = req.body.JobNo;
     const JobTitle = req.body.JobTitle;
     const Qualification = req.body.Qualification;
@@ -66,6 +67,64 @@ router.route('/getallrecentjobs').get((req, res) => {
     })
 });
 
+router.route('/deletejob').post((req, res) => {
+    const JobNo = req.body.JobNo;
+
+        // console.log("userid"+UserId);
+        console.log(req.body);
+        recentjobs.findOneAndDelete({
+            JobNo : JobNo},function(err, response){
+                if (err) {
+                    res.json({
+                        success: false,
+                        message: 'Job not deleted',
+                        error: err
+                    });
+                }
+                if(response != null){
+                    res.json({
+                        success: true,
+                        message: "Deleted successfully",
+                        result: response
+                    }); 
+                } else {
+                    console.log("Job Not Found");
+                    res.json({
+                        success: false,
+                        message: 'Job Not Found',
+                        error: err
+                    });
+                }
+            })
+});
+router.route('/updatejob').put((req, res) => {
+    const JobNo = req.body.JobNo;
+    recentjobs.findOneAndUpdate({
+        JobNo : JobNo},req.body,function(err, response){
+        if (err) {
+            res.json({
+                success: false,
+                message: 'Job not updated',
+                error: err
+            });
+        } 
+        if(response != null){
+            res.json({
+                success: true,
+                message: "Job updated successfully",
+                result: response
+            }); 
+        } else {
+            console.log("Job Not Found");
+            // console.log(err);
+            res.json({
+                success: false,
+                message: "Job not updated",
+                error: err
+            });
+        }   
+    })
+});
 
 
 module.exports = router;
