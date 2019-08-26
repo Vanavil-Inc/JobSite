@@ -25,7 +25,7 @@ router.route('/jobpost').post((req, res) => {
         if (response.length > 0) {
             res.json({
                 success: false,
-                message: 'Job No already Exists',
+                message: 'JobNo already Exists',
                 error: err
             })
         } else {
