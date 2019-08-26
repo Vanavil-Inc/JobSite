@@ -363,7 +363,8 @@ router.route('/getalljobseeker').post((req, res) => {
 router.route('/getonejobseeker').post((req, res) => {
 
     const UserId = req.body.UserId;
-
+    const UserType = req.body.UserType;
+    
     seeker.find({UserId : UserId},function(err, response){
         if (err) {
             res.json({
@@ -372,7 +373,9 @@ router.route('/getonejobseeker').post((req, res) => {
                 error: err
             });
         } 
+        
             if(response.length > 0){
+                if(response[0].UserType === UserType){
                 res.json({
                     success: true,
                     message: 'User data Found',
@@ -385,6 +388,13 @@ router.route('/getonejobseeker').post((req, res) => {
                     error: err
                 });
              }
+            } else {
+                res.json({
+                    success: false,
+                    message: constant.userEmpty,
+                    error: err
+                });
+            }
     })
 });
 
