@@ -1,10 +1,8 @@
 const router = require('express').Router();
-const jwt = require('jsonwebtoken');
 
 const contact = require('./contact-model'); 
 const constant=require('../Constant');
-const config = require('../Config');
-
+var nodemailer = require('nodemailer');
 router.route('/contact').post((req, res) => {
     const UserId = req.body.UserId;
     const UserName = req.body.UserName;
@@ -19,6 +17,31 @@ router.route('/contact').post((req, res) => {
         TypeOfService : TypeOfService,
         Message : Message       
     }
+    
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'shobana.sekar@vanavil-systems.com',
+    pass: 'shobana104'
+  }
+});
+
+var mailOptions = {
+  //from: email,
+  to: 'shobana.sekar@vanavil-systems.com, thangadurai.muthusamy@vanavil-systems.com',
+  subject: TypeOfService,
+  html: '<span>An User submitted Contact form<br><br>UserId: '+ UserId +'<br>UserName: ' + UserName + '<br>Email: '+ email +'<br>Type Of Service: ' + TypeOfService+'<br>Message: '+ Message +'</span>'
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+  }
+});
+
 
     contact.create(contactObj, (err, user) => {
                 if (err) {
