@@ -152,7 +152,7 @@ router.route('/register').post((req, res,next) => {
     
 });
 
-router.route('/deletejobseeker').post((req, res) => {
+router.route('/deleteprofile').post((req, res) => {
     const UserId = req.body.UserId;
 
         // console.log("userid"+UserId);
@@ -162,7 +162,7 @@ router.route('/deletejobseeker').post((req, res) => {
                 if (err) {
                     res.json({
                         success: false,
-                        message: 'Jobseeker not deleted',
+                        message: 'Not deleted',
                         error: err
                     });
                 }
@@ -176,7 +176,7 @@ router.route('/deletejobseeker').post((req, res) => {
                     console.log("Jobseeker Not Found");
                     res.json({
                         success: false,
-                        message: 'Jobseeker Not Found',
+                        message: 'Not Found',
                         error: err
                     });
                 }
@@ -360,7 +360,9 @@ router.route('/getalljobseeker').post((req, res) => {
     }) 
 });
 
-router.route('/getonejobseeker').post((req, res) => {
+//profile edit of jobseeker and emp by ADMIN (Use this route)
+
+router.route('/getoneprofile').post((req, res) => {
 
     const UserId = req.body.UserId;
     const UserType = req.body.UserType;
@@ -388,6 +390,35 @@ router.route('/getonejobseeker').post((req, res) => {
                     error: err
                 });
              }
+            } else {
+                res.json({
+                    success: false,
+                    message: constant.userEmpty,
+                    error: err
+                });
+            }
+    })
+});
+
+//profile edit for only jobseeker(Use this route)
+router.route('/getonejobseeker').post((req, res) => {
+
+    const UserId = req.body.UserId;
+    
+    seeker.find({UserId : UserId},function(err, response){
+        if (err) {
+            res.json({
+                success: false,
+                message: 'User data not found',
+                error: err
+            });
+        }  
+            if(response.length > 0){
+                res.json({
+                    success: true,
+                    message: 'User data Found',
+                    result: response
+                });
             } else {
                 res.json({
                     success: false,
