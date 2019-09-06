@@ -93,6 +93,9 @@ module.exports = new mongoose.Schema({
     DocDirPath: {
         type: String
     },
+    JobsApplied: {
+        type: Array
+    },
     ObjId: {
         type: ObjectID
     }

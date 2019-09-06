@@ -508,5 +508,61 @@ router.route('/login').post((req, res) => {
     
 });
 
+router.route('/apply').post((req, res) => {
+    const UserId = req.body.UserId;
+    const JobNo = req.body.JobNo;
+
+    seeker.find({
+        UserId : UserId
+    },function(err, userResp){
+        if(err){
+            console.log(err)
+            res.json({
+                success: false,
+                message: constant.genericError,
+                error: err
+            })
+        }
+        if(userResp != ""){
+            seeker.findOneAndUpdate({UserId:UserId},{ $push: { JobsApplied: {$each:[JobNo] }} }, function(err,Resp){
+                if(err){
+                    res.json({
+                        success: false,
+                        message: constant.genericError,
+                        error: err
+                    })
+                } else {
+                    seeker.find({UserId:UserId}, function(err,applyResp){
+                        if(err){
+                            res.json({
+                                success: false,
+                                message: constant.genericError,
+                                error: err
+                            })
+                        } else {
+                            res.json({
+                                success: true,
+                                message: "Job Applied Successfully",
+                                result: applyResp  
+                            })
+                        }
+
+                    })
+                    
+                }
+            })
+
+        } else {
+            res.json({
+                success: false,
+                message: "No User found",
+                // error: err
+            })
+        }
+    })
+
+});
+
+
 
 module.exports = router;
